@@ -14,8 +14,9 @@ import (
 
 // InitApp is responsible for initializing the configured application using anko.yaml
 // to configure the primary language and processes.
+var cmd *exec.Cmd
 func (wc *Watcher) InitApp() {
-	var cmd *exec.Cmd
+	
 
 	lang, err := GetLanguage(wc.Language)
 
@@ -64,54 +65,20 @@ func (wc *Watcher) InitApp() {
 }
 
 func (wc *Watcher) resetApp() {
-	re := regexp.MustCompile(`(?m)\/([\w_]*).go$`)
-
-	match := re.FindStringSubmatch(wc.AppPath)
-
-	var appName string
-	if len(match) > 1 {
-		appName = match[1]
+	if cmd == nil || cmd.Process == nil{
+		wc.DoneChan <- true
+		return
 	}
 
-	var command string
-	if wc.SysOS == "linux" {
-		command = "ps -u"
-	} else if wc.SysOS == "mac" {
-		command = "ps -A"
+	var err = cmd.Process.Kill()
+	if err != nil {
+		banner.Error(err.Error())
+		wc.DoneChan <- true
+		return
 	}
-	b, _ := exec.Command("/bin/sh", "-c", command).Output()
-	var r *regexp.Regexp
 
-	r = regexp.MustCompile(fmt.Sprintf(wc.selectedLanguage.ProcessRegexp, appName))
-
-	match = r.FindStringSubmatch(string(b))
-	if len(match) > 1 {
-		i, err := strconv.Atoi(match[1])
-		if err != nil {
-
-			banner.Error(err.Error())
-			wc.DoneChan <- true
-		}
-		p, err := os.FindProcess(i)
-		if err != nil {
-
-			banner.Error(err.Error())
-			wc.DoneChan <- true
-		}
-		p.Kill()
-		time.Sleep(100*time.Millisecond)
-		for{
-			p, err := os.FindProcess(i)
-			if err == nil{
-				p.Kill()
-				time.Sleep(500*time.Millisecond)
-			}else{
-				break	
-			}
-		}
-		
-		go wc.InitApp()
-	}
+	go wc.InitApp()
+	
 }
 
 // AppController is the main channel used for control anko actions
