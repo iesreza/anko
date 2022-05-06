@@ -61,6 +61,7 @@ func (wc *Watcher) InitApp() {
 
 func (wc *Watcher) resetApp() {
 	if cmd == nil || cmd.Process == nil{
+		go wc.InitApp()
 		return
 	}
 
