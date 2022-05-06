@@ -61,6 +61,7 @@ func (wc *Watcher) InitApp() {
 
 func (wc *Watcher) resetApp() {
 	if cmd == nil || cmd.Process == nil{
+		time.Sleep(1*time.Second)
 		go wc.InitApp()
 		return
 	}
@@ -70,7 +71,7 @@ func (wc *Watcher) resetApp() {
 		banner.Error(err.Error())
 		return
 	}
-
+	time.Sleep(1*time.Second)
 	go wc.InitApp()
 	
 }
