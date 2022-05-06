@@ -2,7 +2,6 @@ package watcher
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 	"github.com/GuilhermeCaruso/anko/internal/banner"
