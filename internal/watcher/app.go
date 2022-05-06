@@ -4,12 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"regexp"
-	"strconv"
 	"strings"
-
 	"github.com/GuilhermeCaruso/anko/internal/banner"
-	"time"
 )
 
 // InitApp is responsible for initializing the configured application using anko.yaml
