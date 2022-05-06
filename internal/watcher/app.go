@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/GuilhermeCaruso/anko/internal/banner"
+	"time"
 )
 
 // InitApp is responsible for initializing the configured application using anko.yaml
@@ -98,6 +99,17 @@ func (wc *Watcher) resetApp() {
 			wc.DoneChan <- true
 		}
 		p.Kill()
+		time.Sleep(100*time.Millisecond)
+		for{
+			p, err := os.FindProcess(i)
+			if err == nil{
+				p.Kill()
+				time.Sleep(500*time.Millisecond)
+			}else{
+				break	
+			}
+		}
+		
 		go wc.InitApp()
 	}
 }
