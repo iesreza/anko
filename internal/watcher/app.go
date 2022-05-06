@@ -61,14 +61,12 @@ func (wc *Watcher) InitApp() {
 
 func (wc *Watcher) resetApp() {
 	if cmd == nil || cmd.Process == nil{
-		wc.DoneChan <- true
 		return
 	}
 
 	var err = cmd.Process.Kill()
 	if err != nil {
 		banner.Error(err.Error())
-		wc.DoneChan <- true
 		return
 	}
 
