@@ -6,7 +6,6 @@ import (
 	"strings"
 	"github.com/GuilhermeCaruso/anko/internal/banner"
 	"time"
-	"os"
 )
 
 // InitApp is responsible for initializing the configured application using anko.yaml
